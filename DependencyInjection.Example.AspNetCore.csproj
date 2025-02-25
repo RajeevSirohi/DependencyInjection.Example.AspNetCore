@@ -1,0 +1,11 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <LangVersion>preview</LangVersion>
+    <EnablePreviewFeatures>true</EnablePreviewFeatures>
+    <UserSecretsId>e090d0a6-f7ac-46d4-b7f2-48008510e614</UserSecretsId>
+  </PropertyGroup>
+
+
+</Project>
