@@ -7,8 +7,8 @@
 
     public interface ICartService
     {
-        void AddToCart(string product);
-        List<string> GetCartItems();
+        void AddToCart(int userId, string product);
+        List<string> GetCartItems(int userId);
     }
 
     public interface IDiscountService

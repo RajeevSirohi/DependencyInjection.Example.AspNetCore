@@ -1,42 +1,43 @@
-﻿using DependencyInjection.Example.AspNetCore.Interfaces;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
-[ApiController]
-[Route("[controller]")]
-public class ShopController : ControllerBase
+namespace DependencyInjection.Example.AspNetCore.Controllers
 {
-    private readonly IProductService _productService;
-    private readonly ICartService _cartService;
-    private readonly IDiscountService _discountService;
-
-    public ShopController(IProductService productService, ICartService cartService, IDiscountService discountService)
+    [ApiController]
+    [Route("[controller]")]
+    public class ShopController : ControllerBase
     {
-        _productService = productService;
-        _cartService = cartService;
-        _discountService = discountService;
-    }
+        private readonly IProductService _productService;
+        private readonly ICartService _cartService;
+        private readonly IDiscountService _discountService;
 
-    [HttpGet("add-to-cart")]
-    public IActionResult AddToCart()
-    {
-        string product = _productService.GetProduct(); // Gets a new instance every time
-        _cartService.AddToCart(product); // Adds item to the cart
-        return Ok(new { Message = $"{product} added to cart!" });
-    }
+        public ShopController(IProductService productService, ICartService cartService, IDiscountService discountService)
+        {
+            _productService = productService;
+            _cartService = cartService;
+            _discountService = discountService;
+        }
 
-    [HttpGet("cart-items")]
-    public IActionResult GetCartItems()
-    {
-        var items = _cartService.GetCartItems(); // Retrieves cart items
-        return Ok(new { CartItems = items });
-    }
+        [HttpPost("add-to-cart/{userId}")]
+        public IActionResult AddToCart(int userId)
+        {
+            _cartService.AddToCart(userId, "Laptop");
+            return Ok(new { Message = "Laptop added to cart!" });
+        }
 
-    [HttpGet("checkout")]
-    public IActionResult Checkout()
-    {
-        var items = _cartService.GetCartItems();
-        double total = items.Count * 1000; // Assume each item is ₹1000
-        double finalAmount = _discountService.ApplyDiscount(total); // Apply discount
-        return Ok(new { TotalAmount = total, DiscountedAmount = finalAmount });
+        [HttpGet("cart-items/{userId}")]
+        public IActionResult GetCartItems(int userId)
+        {
+            var items = _cartService.GetCartItems(userId);
+            return Ok(new { CartItems = items });
+        }
+
+        [HttpGet("checkout/{userId}")]
+        public IActionResult Checkout(int userId)
+        {
+            var items = _cartService.GetCartItems(userId);
+            double total = items.Count * 1000; // Assume each item is ₹1000
+            double finalAmount = _discountService.ApplyDiscount(total); // Apply discount
+            return Ok(new { TotalAmount = total, DiscountedAmount = finalAmount });
+        }
     }
 }
